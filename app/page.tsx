@@ -1,10 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { Clipboard, Download, FileCode2, GitBranch, Github, Search, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+import { useState, useRef, useEffect } from "react";
+import {
+  Clipboard,
+  Download,
+  FileCode2,
+  GitBranchPlus,
+  Search,
+  X,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Drawer,
   DrawerClose,
@@ -14,13 +21,13 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { cn } from "@/lib/utils"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Toaster as SonnerToaster, toast } from "sonner"
-import { CodeBlock } from "@/components/code-block"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/drawer";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Toaster as SonnerToaster, toast } from "sonner";
+import { CodeBlock } from "@/components/code-block";
+import { Badge } from "@/components/ui/badge";
 
 // Optimized project types with essential content only
 const projectTypes = [
@@ -1059,92 +1066,107 @@ GitHub.sublime-settings`,
       },
     ],
   },
-]
+];
 
 export default function GitIgnoreGenerator() {
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState("Web")
-  const [searchQuery, setSearchQuery] = useState("")
-  const tabsRef = useRef<HTMLDivElement>(null)
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("Web");
+  const [searchQuery, setSearchQuery] = useState("");
+  const tabsRef = useRef<HTMLDivElement>(null);
 
-  const allCategories = projectTypes.map((category) => category.category)
+  const allCategories = projectTypes.map((category) => category.category);
 
   // Reset search when changing tabs
   const handleTabChange = (value: string) => {
-    setActiveTab(value)
+    setActiveTab(value);
     if (searchQuery) {
-      setSearchQuery("")
+      setSearchQuery("");
     }
 
     // Scroll to the active tab
     setTimeout(() => {
       if (tabsRef.current) {
-        const activeTabElement = tabsRef.current.querySelector('[data-state="active"]')
+        const activeTabElement = tabsRef.current.querySelector(
+          '[data-state="active"]',
+        );
         if (activeTabElement) {
-          const tabsContainer = tabsRef.current
-          const activeTabRect = activeTabElement.getBoundingClientRect()
-          const containerRect = tabsContainer.getBoundingClientRect()
+          const tabsContainer = tabsRef.current;
+          const activeTabRect = activeTabElement.getBoundingClientRect();
+          const containerRect = tabsContainer.getBoundingClientRect();
 
           // Calculate the scroll position to center the active tab
-          const scrollLeft = activeTabRect.left - containerRect.left - containerRect.width / 2 + activeTabRect.width / 2
+          const scrollLeft =
+            activeTabRect.left -
+            containerRect.left -
+            containerRect.width / 2 +
+            activeTabRect.width / 2;
 
           tabsContainer.scrollTo({
             left: scrollLeft,
             behavior: "smooth",
-          })
+          });
         }
       }
-    }, 100)
-  }
+    }, 100);
+  };
 
   // Scroll to active tab on initial render
   useEffect(() => {
     if (tabsRef.current) {
-      const activeTabElement = tabsRef.current.querySelector('[data-state="active"]')
+      const activeTabElement = tabsRef.current.querySelector(
+        '[data-state="active"]',
+      );
       if (activeTabElement) {
-        const tabsContainer = tabsRef.current
-        const activeTabRect = activeTabElement.getBoundingClientRect()
-        const containerRect = tabsContainer.getBoundingClientRect()
+        const tabsContainer = tabsRef.current;
+        const activeTabRect = activeTabElement.getBoundingClientRect();
+        const containerRect = tabsContainer.getBoundingClientRect();
 
         // Calculate the scroll position to center the active tab
-        const scrollLeft = activeTabRect.left - containerRect.left - containerRect.width / 2 + activeTabRect.width / 2
+        const scrollLeft =
+          activeTabRect.left -
+          containerRect.left -
+          containerRect.width / 2 +
+          activeTabRect.width / 2;
 
         tabsContainer.scrollTo({
           left: scrollLeft,
           behavior: "smooth",
-        })
+        });
       }
     }
-  }, [])
+  }, []);
 
   const handleTypeToggle = (typeId: string) => {
     setSelectedTypes((prev) => {
       if (prev.includes(typeId)) {
-        return prev.filter((id) => id !== typeId)
+        return prev.filter((id) => id !== typeId);
       } else {
-        return [...prev, typeId]
+        return [...prev, typeId];
       }
-    })
-  }
+    });
+  };
 
   const generateGitIgnore = () => {
-    let content = "# Generated .gitignore file\n# Created with Git Ignore Generator\n\n"
+    let content =
+      "# Generated .gitignore file\n# Created with Gitie\n\n";
 
     selectedTypes.forEach((typeId) => {
-      const category = projectTypes.find((category) => category.items.some((item) => item.id === typeId))
-      const item = category?.items.find((item) => item.id === typeId)
+      const category = projectTypes.find((category) =>
+        category.items.some((item) => item.id === typeId),
+      );
+      const item = category?.items.find((item) => item.id === typeId);
 
       if (item) {
-        content += `# ${item.label}\n${item.content}\n\n`
+        content += `# ${item.label}\n${item.content}\n\n`;
       }
-    })
+    });
 
-    return content
-  }
+    return content;
+  };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generateGitIgnore())
+    navigator.clipboard.writeText(generateGitIgnore());
 
     toast.success("Copied to clipboard", {
       description: (
@@ -1152,63 +1174,67 @@ export default function GitIgnoreGenerator() {
           The .gitignore content has been copied to your clipboard.
         </p>
       ),
-    })
-  }
+    });
+  };
 
   const downloadGitIgnore = () => {
-    const content = generateGitIgnore()
-    const blob = new Blob([content], { type: "text/plain" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = ".gitignore"
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-    toast.success(<p className="font-[GeistSans] font-bold">
-      Your .gitignore file has been downloaded.
-    </p>)
-  }
+    const content = generateGitIgnore();
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = ".gitignore";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(
+      <p className="font-[GeistSans] font-bold">
+        Your .gitignore file has been downloaded.
+      </p>,
+    );
+  };
 
   const filteredItems = (category: (typeof projectTypes)[0]) => {
-    if (!searchQuery.trim()) return category.items
-    return category.items.filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase().trim()))
-  }
+    if (!searchQuery.trim()) return category.items;
+    return category.items.filter((item) =>
+      item.label.toLowerCase().includes(searchQuery.toLowerCase().trim()),
+    );
+  };
 
   // Get all items for the current view (either filtered by search or by tab)
   const currentItems = searchQuery.trim()
     ? projectTypes.flatMap((category) => filteredItems(category))
-    : projectTypes.find((category) => category.category === activeTab)?.items || []
+    : projectTypes.find((category) => category.category === activeTab)?.items ||
+    [];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-white dark:from-black dark:to-zinc-900">
       <SonnerToaster position="top-center" closeButton richColors />
 
       {/* Vercel-style header */}
-      <header className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black">
+      <header className="w-full border-b sticky top-0 z-20 backdrop-blur-md border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black/50">
         <div className="container mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <GitBranch className="h-5 w-5 sm:h-6 sm:w-6 text-primary dark:text-primary" />
+            <GitBranchPlus className="h-5 w-5 sm:h-6 sm:w-6 text-primary dark:text-primary" />
             <h1 className="text-lg sm:text-xl font-bold tracking-tight truncate">
               Gitie
             </h1>
           </div>
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-12 max-w-5xl">
         {/* Vercel-style hero section */}
-        <div className="text-left sm:text-center mb-8 sm:mb-12 px-4">
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-4 max-w-4xl mx-auto sm:text-center">
+        <div className="text-left sm:text-center mb-8 sm:mb-12 px-1">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-1 max-w-4xl sm:mb-4 mx-auto sm:text-center">
             One click to ignore them.
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto sm:text-center">
-            Mix 'n match tech stacks like toppings — and ignore them all.
+            Ignore like a boss. Commit like a king.
           </p>
         </div>
-
 
         <div className="bg-white dark:bg-zinc-950 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
           {/* Search bar */}
@@ -1236,7 +1262,11 @@ export default function GitIgnoreGenerator() {
           {/* Tabs for categories */}
           {!searchQuery && (
             <div className="px-6 pt-4">
-              <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full mb-4">
+              <Tabs
+                value={activeTab}
+                onValueChange={handleTabChange}
+                className="w-full mb-4"
+              >
                 <div className="relative">
                   {/* Improved scrollable tabs container */}
                   <div
@@ -1270,7 +1300,12 @@ export default function GitIgnoreGenerator() {
               <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 Search results for "{searchQuery}"
               </h2>
-              <Button variant="ghost" size="sm" onClick={() => setSearchQuery("")} className="h-7 px-2 text-xs">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSearchQuery("")}
+                className="h-7 px-2 text-xs"
+              >
                 Clear search
               </Button>
             </div>
@@ -1296,12 +1331,16 @@ export default function GitIgnoreGenerator() {
                         <div
                           className={cn(
                             "flex items-center justify-center",
-                            selectedTypes.includes(item.id) ? "text-primary" : "text-zinc-500 dark:text-zinc-400",
+                            selectedTypes.includes(item.id)
+                              ? "text-primary"
+                              : "text-zinc-500 dark:text-zinc-400",
                           )}
                         >
                           {item.icon}
                         </div>
-                        <span className="text-xs font-medium truncate">{item.label}</span>
+                        <span className="text-xs font-medium truncate">
+                          {item.label}
+                        </span>
                       </div>
                       <div className="flex items-center justify-center">
                         <Checkbox
@@ -1320,7 +1359,9 @@ export default function GitIgnoreGenerator() {
               ) : (
                 <div className="col-span-full text-center py-10">
                   <p className="text-zinc-500 dark:text-zinc-400">
-                    {searchQuery ? "No matches found for your search" : "No items available in this category"}
+                    {searchQuery
+                      ? "No matches found for your search"
+                      : "No items available in this category"}
                   </p>
                 </div>
               )}
@@ -1331,10 +1372,16 @@ export default function GitIgnoreGenerator() {
           <div className="px-6 py-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col xs:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                {selectedTypes.length} {selectedTypes.length === 1 ? "item" : "items"} selected
+                {selectedTypes.length}{" "}
+                {selectedTypes.length === 1 ? "item" : "items"} selected
               </span>
               {selectedTypes.length > 0 && (
-                <Button variant="outline" size="sm" onClick={() => setSelectedTypes([])} className="h-7 px-2 text-xs bg-secondary">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedTypes([])}
+                  className="h-7 px-2 text-xs bg-secondary"
+                >
                   Clear
                 </Button>
               )}
@@ -1362,24 +1409,33 @@ export default function GitIgnoreGenerator() {
                       </h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedTypes.map((id) => {
-                          const category = projectTypes.find((c) => c.items.some((i) => i.id === id))
-                          const item = category?.items.find((i) => i.id === id)
+                          const category = projectTypes.find((c) =>
+                            c.items.some((i) => i.id === id),
+                          );
+                          const item = category?.items.find((i) => i.id === id);
 
                           return item ? (
                             <Badge key={id} variant="default">
                               {item.label}
                             </Badge>
-                          ) : null
+                          ) : null;
                         })}
                       </div>
                     </DrawerDescription>
                   </DrawerHeader>
                   <div className="p-4 pb-0">
-                    <CodeBlock code={generateGitIgnore()} language="gitignore" showLineNumbers={true} />
+                    <CodeBlock
+                      code={generateGitIgnore()}
+                      language="gitignore"
+                      showLineNumbers={true}
+                    />
                   </div>
                   <DrawerFooter className="flex flex-col sm:flex-row justify-end gap-2">
                     <DrawerClose asChild>
-                      <Button variant="outline" className="border-zinc-300 dark:border-zinc-700">
+                      <Button
+                        variant="outline"
+                        className="border-zinc-300 dark:border-zinc-700"
+                      >
                         Close
                       </Button>
                     </DrawerClose>
@@ -1391,7 +1447,10 @@ export default function GitIgnoreGenerator() {
                       <Clipboard className="h-4 w-4" />
                       Copy
                     </Button>
-                    <Button onClick={downloadGitIgnore} className="gap-2 bg-primary hover:bg-primary/50">
+                    <Button
+                      onClick={downloadGitIgnore}
+                      className="gap-2 bg-primary hover:bg-primary/50"
+                    >
                       <Download className="h-4 w-4" />
                       Download
                     </Button>
@@ -1406,8 +1465,10 @@ export default function GitIgnoreGenerator() {
           <div className="mt-6 sm:mt-8 px-4">
             <div className="flex flex-wrap justify-center gap-2 max-w-full">
               {selectedTypes.map((typeId) => {
-                const category = projectTypes.find((c) => c.items.some((i) => i.id === typeId))
-                const item = category?.items.find((i) => i.id === typeId)
+                const category = projectTypes.find((c) =>
+                  c.items.some((i) => i.id === typeId),
+                );
+                const item = category?.items.find((i) => i.id === typeId);
                 return (
                   item && (
                     <span
@@ -1415,11 +1476,13 @@ export default function GitIgnoreGenerator() {
                       className="inline-flex items-center px-3 py-1.5 rounded-full text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 gap-2 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {item.icon}
-                      <span className="max-w-[100px] truncate">{item.label}</span>
+                      <span className="max-w-[100px] truncate">
+                        {item.label}
+                      </span>
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          handleTypeToggle(typeId)
+                          e.stopPropagation();
+                          handleTypeToggle(typeId);
                         }}
                         className="rounded-full p-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
                       >
@@ -1427,18 +1490,18 @@ export default function GitIgnoreGenerator() {
                       </button>
                     </span>
                   )
-                )
+                );
               })}
             </div>
           </div>
         )}
 
         <div className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          <p>Based on the official GitHub .gitignore standar.
-            <br />
-            Select multiple project types to combine them.</p>
+          <p>
+            Based on the official GitHub .gitignore standards.
+          </p>
         </div>
       </div>
-    </div >
-  )
+    </div>
+  );
 }
