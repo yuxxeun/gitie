@@ -1,5 +1,5 @@
 import type React from "react";
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/next";
 import "@/app/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -7,16 +7,16 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata = {
   title: "Gitie",
-  description: "Ignore like a boss. Commit like a king.",
+  description: "Ignore files like a pro, commit with confidence.",
   icons: {
-    icon: '/favicon/favicon.ico',
+    icon: "/favicon/favicon.ico",
   },
   openGraph: {
-    title: "Gitie",
-    description: "Ignore like a boss. Commit like a king.",
+    title: "Gitie — One click to ignore them",
+    description: "Ignore files like a pro, commit with confidence.",
     images: [
       {
-        url: "/banner.png",
+        url: "/hero.jpg",
         width: 1200,
         height: 630,
         alt: "Gitie Preview Banner",
@@ -25,11 +25,11 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gitie",
-    description: "Ignore like a boss. Commit like a king.",
-    images: ["/banner.png"],
+    title: "Gitie — One click to ignore them",
+    description: "Ignore files like a pro, commit with confidence.",
+    images: ["/hero.jpg"],
   },
-}
+};
 
 export default function RootLayout({
   children,
@@ -38,7 +38,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`dark ${GeistSans.variable} ${GeistMono.variable} font-sans`}>
+      <body
+        className={`dark ${GeistSans.variable} ${GeistMono.variable} font-sans`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
