@@ -7,13 +7,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata = {
   title: "Gitie",
-  description: "Ignore files like a pro, commit with confidence.",
+  description: "Ignore like a pro, commit with confidence.",
   icons: {
     icon: "/favicon/favicon.ico",
   },
   openGraph: {
     title: "Gitie — One click to ignore them",
-    description: "Ignore files like a pro, commit with confidence.",
+    description: "Ignore like a pro, commit with confidence.",
     images: [
       {
         url: "/hero.jpg",
@@ -26,7 +26,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Gitie — One click to ignore them",
-    description: "Ignore files like a pro, commit with confidence.",
+    description: "Ignore like a pro, commit with confidence.",
     images: ["/hero.jpg"],
   },
 };
