@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { FileCode2 } from 'lucide-react'
+import * as React from "react";
+import { FileCode2 } from "lucide-react";
 
 export interface ProjectItem {
   id: string;
@@ -1046,7 +1046,7 @@ bh_unicode_properties.cache
 # Sublime-github package stores a github token in this file
 # https:
 GitHub.sublime-settings`,
-      }
+      },
     ],
   },
 ];

@@ -6,6 +6,7 @@ import {
   Download,
   FileCode2,
   GitBranchPlus,
+  Github,
   Search,
   X,
 } from "lucide-react";
@@ -27,6 +28,8 @@ import { Toaster as SonnerToaster, toast } from "sonner";
 import { CodeBlock } from "@/components/code-block";
 import { Badge } from "@/components/ui/badge";
 import { projectTypes } from "@/data/projectTypes";
+import { Site } from "@/lib/constant";
+import Header from "@/components/header";
 
 export default function GitIgnoreGenerator() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
@@ -156,29 +159,18 @@ export default function GitIgnoreGenerator() {
   const currentItems = searchQuery.trim()
     ? projectTypes.flatMap((category) => filteredItems(category))
     : projectTypes.find((category) => category.category === activeTab)?.items ||
-    [];
+      [];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-white dark:from-black dark:to-zinc-900">
       <SonnerToaster position="top-center" richColors />
-      <header className="w-full border-b sticky top-0 z-20 backdrop-blur-md border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black/50">
-        <div className="container mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <GitBranchPlus className="h-5 w-5 sm:h-6 sm:w-6 text-primary dark:text-primary" />
-            <h1 className="text-lg sm:text-xl font-bold tracking-tight truncate">
-              Gitie
-            </h1>
-          </div>
-        </div>
-      </header>
-
       <div className="container mx-auto px-4 py-12 max-w-5xl">
         <div className="text-left sm:text-center mb-8 sm:mb-12 px-1">
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-1 max-w-4xl sm:mb-4 mx-auto sm:text-center">
-            One click to ignore them.
+            {Site.headline}
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto sm:text-center">
-            Ignore files like a pro, commit with confidence.
+            {Site.description}
           </p>
         </div>
 
@@ -278,7 +270,7 @@ export default function GitIgnoreGenerator() {
                         >
                           {item.icon}
                         </div>
-                        <span className="text-xs font-medium truncate">
+                        <span className="text-sm font-mono font-medium truncate">
                           {item.label}
                         </span>
                       </div>
@@ -339,9 +331,6 @@ export default function GitIgnoreGenerator() {
               <DrawerContent className="bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 rounded-t-xl">
                 <div className="mx-auto w-full max-w-4xl px-4">
                   <DrawerHeader>
-                    {/* <DrawerTitle className="text-xl font-bold">
-                      Hey, this is your .gitignore 🎊
-                    </DrawerTitle> */}
                     <DrawerDescription className="text-sm">
                       <h3 className="text-lg font-bold mb-2">
                         Based on your selected project types:
@@ -423,7 +412,7 @@ export default function GitIgnoreGenerator() {
                           e.stopPropagation();
                           handleTypeToggle(typeId);
                         }}
-                        className="rounded-full p-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
+                        className="rounded-full p-0.5 hover:bg-zinc-600 transition-colors"
                       >
                         <X className="h-3.5 w-3.5" />
                       </button>
@@ -434,10 +423,6 @@ export default function GitIgnoreGenerator() {
             </div>
           </div>
         )}
-
-        <div className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          <p>Based on the official GitHub .gitignore standards.</p>
-        </div>
       </div>
     </div>
   );

@@ -4,6 +4,8 @@ import "@/app/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 
 export const metadata = {
   title: "Gitie",
@@ -47,7 +49,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Header />
           {children}
+          <Footer />
         </ThemeProvider>
         <Analytics />
       </body>
