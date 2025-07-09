@@ -14,7 +14,6 @@ interface CodeBlockProps {
 
 export function CodeBlock({
   code,
-  language = "gitignore",
   showLineNumbers = true,
   className,
 }: CodeBlockProps) {

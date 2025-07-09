@@ -1,15 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import {
-  Clipboard,
-  Download,
-  FileCode2,
-  GitBranchPlus,
-  Github,
-  Search,
-  X,
-} from "lucide-react";
+import { Clipboard, Download, FileCode2, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,7 +21,6 @@ import { CodeBlock } from "@/components/code-block";
 import { Badge } from "@/components/ui/badge";
 import { projectTypes } from "@/data/projectTypes";
 import { Site } from "@/lib/constant";
-import Header from "@/components/header";
 
 export default function GitIgnoreGenerator() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
@@ -40,12 +31,7 @@ export default function GitIgnoreGenerator() {
 
   const allCategories = projectTypes.map((category) => category.category);
 
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    if (searchQuery) {
-      setSearchQuery("");
-    }
-
+  const scrollToActiveTab = () => {
     setTimeout(() => {
       if (tabsRef.current) {
         const activeTabElement = tabsRef.current.querySelector(
@@ -63,7 +49,7 @@ export default function GitIgnoreGenerator() {
             activeTabRect.width / 2;
 
           tabsContainer.scrollTo({
-            left: scrollLeft,
+            left: tabsContainer.scrollLeft + scrollLeft,
             behavior: "smooth",
           });
         }
@@ -71,28 +57,16 @@ export default function GitIgnoreGenerator() {
     }, 100);
   };
 
-  useEffect(() => {
-    if (tabsRef.current) {
-      const activeTabElement = tabsRef.current.querySelector(
-        '[data-state="active"]',
-      );
-      if (activeTabElement) {
-        const tabsContainer = tabsRef.current;
-        const activeTabRect = activeTabElement.getBoundingClientRect();
-        const containerRect = tabsContainer.getBoundingClientRect();
-
-        const scrollLeft =
-          activeTabRect.left -
-          containerRect.left -
-          containerRect.width / 2 +
-          activeTabRect.width / 2;
-
-        tabsContainer.scrollTo({
-          left: scrollLeft,
-          behavior: "smooth",
-        });
-      }
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    if (searchQuery) {
+      setSearchQuery("");
     }
+    scrollToActiveTab();
+  };
+
+  useEffect(() => {
+    scrollToActiveTab();
   }, []);
 
   const handleTypeToggle = (typeId: string) => {
@@ -125,7 +99,7 @@ export default function GitIgnoreGenerator() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generateGitIgnore());
     toast.success(
-      <p className="font-[GeistSans] font-bold">
+      <p className="font-sans font-bold">
         The .gitignore content has been copied to your clipboard.
       </p>,
     );
@@ -143,7 +117,7 @@ export default function GitIgnoreGenerator() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     toast.success(
-      <p className="font-[GeistSans] font-bold">
+      <p className="font-sans font-bold">
         Your .gitignore file has been downloaded.
       </p>,
     );
@@ -206,23 +180,40 @@ export default function GitIgnoreGenerator() {
                 <div className="relative">
                   <div
                     ref={tabsRef}
-                    className="overflow-x-auto scrollbar-hide touch-pan-x"
-                    style={{ WebkitOverflowScrolling: "touch" }}
+                    className="overflow-x-auto scrollbar-hide touch-pan-x scroll-smooth rounded-xl"
+                    style={{
+                      WebkitOverflowScrolling: "touch",
+                      scrollbarWidth: "none",
+                      msOverflowStyle: "none",
+                    }}
                   >
-                    <TabsList className="inline-flex w-max bg-zinc-100 dark:bg-zinc-900 p-1.5 rounded-lg">
+                    <TabsList className="flex w-full min-w-max bg-zinc-100 dark:bg-zinc-900 p-1.5 rounded-xl">
                       {allCategories.map((category) => (
                         <TabsTrigger
                           key={category}
                           value={category}
-                          className="px-4 py-1.5 text-xs font-medium whitespace-nowrap data-[state=active]:bg-primary dark:data-[state=active]:bg-primary data-[state=active]:shadow-sm rounded-md"
+                          className={cn(
+                            "flex-1 min-w-0 mx-1 px-3 py-1.5 text-xs sm:text-sm font-medium whitespace-nowrap",
+                            "data-[state=active]:bg-primary dark:data-[state=active]:bg-primary",
+                            "data-[state=active]:shadow-sm data-[state=active]:text-white",
+                            "rounded-xl transition-all duration-200 ease-in-out",
+                            "hover:bg-zinc-200 dark:hover:bg-zinc-800",
+                            "data-[state=active]:hover:bg-primary/90",
+                            // Make tabs responsive
+                            allCategories.length > 6
+                              ? "min-w-[120px] max-w-[140px]"
+                              : "min-w-[80px] sm:min-w-[100px]",
+                          )}
                         >
-                          {category}
+                          <span className="truncate">{category}</span>
                         </TabsTrigger>
                       ))}
                     </TabsList>
                   </div>
-                  <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white dark:from-zinc-950 to-transparent pointer-events-none sm:hidden"></div>
-                  <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white dark:from-zinc-950 to-transparent pointer-events-none sm:hidden"></div>
+
+                  {/* Smooth gradient overlays for mobile scroll indication */}
+                  <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-zinc-950 to-transparent pointer-events-none sm:w-4 opacity-60"></div>
+                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-zinc-950 to-transparent pointer-events-none sm:w-4 opacity-60"></div>
                 </div>
               </Tabs>
             </div>
@@ -231,7 +222,7 @@ export default function GitIgnoreGenerator() {
           {searchQuery && (
             <div className="px-6 pt-4 pb-2 flex justify-between items-center">
               <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                Search results for "{searchQuery}"
+                Search results for &quot;{searchQuery}&quot;
               </h2>
               <Button
                 variant="ghost"
@@ -251,18 +242,18 @@ export default function GitIgnoreGenerator() {
                   <Card
                     key={item.id}
                     className={cn(
-                      "cursor-pointer transition-all border overflow-hidden group h-12",
+                      "cursor-pointer transition-all duration-200 border overflow-hidden group h-12 hover:shadow-sm",
                       selectedTypes.includes(item.id)
-                        ? "border-primary bg-primary/5 dark:bg-primary/10"
+                        ? "border-primary bg-primary/5 dark:bg-primary/10 shadow-sm"
                         : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700",
                     )}
                     onClick={() => handleTypeToggle(item.id)}
                   >
                     <div className="flex items-center justify-between h-full px-3">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 min-w-0">
                         <div
                           className={cn(
-                            "flex items-center justify-center",
+                            "flex items-center justify-center flex-shrink-0 transition-colors",
                             selectedTypes.includes(item.id)
                               ? "text-primary"
                               : "text-zinc-500 dark:text-zinc-400",
@@ -274,11 +265,11 @@ export default function GitIgnoreGenerator() {
                           {item.label}
                         </span>
                       </div>
-                      <div className="flex items-center justify-center">
+                      <div className="flex items-center justify-center flex-shrink-0">
                         <Checkbox
                           checked={selectedTypes.includes(item.id)}
                           className={cn(
-                            "h-5 w-5 rounded-sm border-2 transition-all",
+                            "h-5 w-5 rounded-xl border-2 transition-all duration-200",
                             selectedTypes.includes(item.id)
                               ? "border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                               : "border-zinc-300 dark:border-zinc-600",
@@ -289,8 +280,8 @@ export default function GitIgnoreGenerator() {
                   </Card>
                 ))
               ) : (
-                <div className="col-span-full text-center py-10">
-                  <p className="text-zinc-500 dark:text-zinc-400">
+                <div className="col-span-full text-center py-12">
+                  <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                     {searchQuery
                       ? "No matches found for your search"
                       : "No items available in this category"}
@@ -302,7 +293,7 @@ export default function GitIgnoreGenerator() {
 
           <div className="px-6 py-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col xs:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">
+              <span className="text-sm font-mono text-zinc-400">
                 {selectedTypes.length}{" "}
                 {selectedTypes.length === 1 ? "item" : "items"} selected
               </span>
@@ -311,7 +302,7 @@ export default function GitIgnoreGenerator() {
                   variant="outline"
                   size="sm"
                   onClick={() => setSelectedTypes([])}
-                  className="h-7 px-2 text-xs bg-secondary"
+                  className="h-6 px-2 text-xs bg-secondary hover:bg-secondary/80 transition-colors"
                 >
                   Clear
                 </Button>
@@ -321,7 +312,7 @@ export default function GitIgnoreGenerator() {
               <DrawerTrigger asChild>
                 <Button
                   disabled={selectedTypes.length === 0}
-                  className="gap-2 h-9 bg-primary hover:bg-primary/50 text-white"
+                  className="gap-2 h-9 bg-primary hover:bg-primary/90 text-white transition-colors disabled:opacity-50"
                   size="sm"
                 >
                   <FileCode2 className="h-3.5 w-3.5" />
@@ -362,7 +353,7 @@ export default function GitIgnoreGenerator() {
                     <DrawerClose asChild>
                       <Button
                         variant="outline"
-                        className="border-zinc-300 dark:border-zinc-700"
+                        className="border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                       >
                         Close
                       </Button>
@@ -370,14 +361,14 @@ export default function GitIgnoreGenerator() {
                     <Button
                       variant="outline"
                       onClick={copyToClipboard}
-                      className="gap-2 border-primary text-primary hover:bg-primary/50 dark:border-primary hover:text-primary dark:hover:bg-primary/10"
+                      className="gap-2 border-primary text-primary hover:bg-primary/10 dark:border-primary hover:text-primary dark:hover:bg-primary/10"
                     >
                       <Clipboard className="h-4 w-4" />
                       Copy
                     </Button>
                     <Button
                       onClick={downloadGitIgnore}
-                      className="gap-2 bg-primary hover:bg-primary/50"
+                      className="gap-2 bg-primary hover:bg-primary/90 text-white"
                     >
                       <Download className="h-4 w-4" />
                       Download
@@ -401,7 +392,7 @@ export default function GitIgnoreGenerator() {
                   item && (
                     <span
                       key={typeId}
-                      className="inline-flex items-center px-3 py-1.5 rounded-full text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 gap-2 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                      className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 gap-2 transition-all duration-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:shadow-sm"
                     >
                       {item.icon}
                       <span className="max-w-[100px] truncate">
@@ -412,7 +403,7 @@ export default function GitIgnoreGenerator() {
                           e.stopPropagation();
                           handleTypeToggle(typeId);
                         }}
-                        className="rounded-full p-0.5 hover:bg-zinc-600 transition-colors"
+                        className="rounded-full p-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
                       >
                         <X className="h-3.5 w-3.5" />
                       </button>

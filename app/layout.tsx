@@ -1,21 +1,29 @@
-import type React from "react";
-import { Analytics } from "@vercel/analytics/next";
-import "@/app/globals.css";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
-import { ThemeProvider } from "@/components/theme-provider";
-import Footer from "@/components/footer";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
+import { Site } from "@/lib/constant";
 
-export const metadata = {
-  title: "Gitie",
-  description: "Ignore like a pro, commit with confidence.",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: Site.title,
+  description: Site.description,
   icons: {
     icon: "/favicon/favicon.ico",
   },
   openGraph: {
-    title: "Gitie — One click to ignore them",
-    description: "Ignore like a pro, commit with confidence.",
+    title: `${Site.title} - ${Site.headline}`,
+    description: Site.description,
     images: [
       {
         url: "/hero.jpg",
@@ -27,33 +35,25 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gitie — One click to ignore them",
-    description: "Ignore like a pro, commit with confidence.",
+    title: `${Site.title} - ${Site.headline}`,
+    description: Site.description,
     images: ["/hero.jpg"],
   },
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
-        className={`dark ${GeistSans.variable} ${GeistMono.variable} font-sans`}
+        className={`dark font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          {children}
-          <Footer />
-        </ThemeProvider>
-        <Analytics />
+        <Header/>
+        {children}
+        <Footer/>
       </body>
     </html>
   );

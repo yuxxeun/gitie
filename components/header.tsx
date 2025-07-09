@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-20 w-full border-b backdrop-blur-md bg-white/80 dark:bg-black/50 border-zinc-200 dark:border-zinc-800">
+    <header className="lg:px-[250px] px-0.5 sticky top-0 z-20 w-full border-b backdrop-blur-md bg-white/80 dark:bg-black/50 border-zinc-200 dark:border-zinc-800">
       <div className="container mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
         {/* Left: Logo + Title */}
         <div className="flex items-center space-x-2">
